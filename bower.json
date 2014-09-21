@@ -1,7 +1,7 @@
 {
   "name": "b2",
   "main": "b2.js",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "homepage": "https://github.com/b2js/b2",
   "authors": [
     "percy.zhang <percy.zhang@logicmonitor.com>"
