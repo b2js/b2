@@ -1,7 +1,7 @@
 {
   "name": "b2",
   "description": "A super lightweight framework based on backbone.js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "dependencies": {
     "jquery": "*",
     "backbone": "*",
