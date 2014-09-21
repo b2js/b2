@@ -1,19 +1,22 @@
 {
   "name": "b2",
-  "description": "A super lightweight framework based on backbone.js",
+  "main": "b2.js",
   "version": "0.1.2",
-  "dependencies": {
-    "jquery": "*",
-    "backbone": "*",
-    "underscore": "*"
-  },
+  "homepage": "https://github.com/b2js/b2",
+  "authors": [
+    "percy.zhang <percy.zhang@logicmonitor.com>"
+  ],
+  "description": "A super lightweight framework based on backbone.js",
+  "keywords": [
+    "b2",
+    "backbone"
+  ],
+  "license": "MIT",
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
-    "app/bower_components",
     "test",
     "tests"
-  ],
-  "main": "b2.js"
+  ]
 }
