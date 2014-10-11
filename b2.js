@@ -117,7 +117,7 @@
           if (match && selector) {
             // if select is a regexp
             var selectorExp = /\/(.*?)\//.exec(selector);
-            var regSelector = selectorExp[1];
+            var regSelector = selectorExp && selectorExp[1];
 
             if (regSelector) {
               selector = new RegExp(regSelector.replace(/\\/g, '\\\\'));
