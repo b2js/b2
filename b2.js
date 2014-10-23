@@ -45,6 +45,15 @@
     return this;
   };
 
+  var localStorage = {};
+
+  try {
+	localStorage = window.localStorage;
+  } catch(e) {
+  }
+
+  B2.localStorage = localStorage;
+
   _.extend(B2, Backbone);
 
   // B2.View
@@ -200,17 +209,16 @@
     _addFieldToFormParams: function (fieldName, fieldValue, params) {
       if (_.isObject(params)) {
         var paramObj = params[fieldName];
-        var fieldObject = {};
-
-        fieldObject[fieldName] = fieldValue;
 
         if (typeof paramObj == 'undefined')  {
-          paramObj = [];
+          params[fieldName] = fieldValue;
         } else if (!_.isArray(paramObj)) {
-          paramObj = [paramObj];
+	      var oldValue = paramObj;
+          params[fieldName] = [oldValue];
+	      params[fieldName].push(fieldValue);
+        } else if (_.isArray(paramObj)) {
+	        paramObj.push(fieldValue);
         }
-
-        paramObj.push(fieldObject);
       } else if (_.isArray(params)) {
         params.push({
           name: fieldName,
@@ -221,6 +229,7 @@
 
     // Encode a set of form elements as an array of names and values or as an params object
     serializeForm: function (formEl, ignorePrefix, needArray) {
+	  var that = this;
       var $paramEls = $(formEl || this.el).find('input, select, textarea')
         .filter(function () {
           // if the name of a element has a "ignore" prefix, it means not need to be serialized.
@@ -230,7 +239,7 @@
       var params = {};
 
       if (needArray) {
-        params = {};
+        params = [];
       }
 
       $paramEls.each(function () {
@@ -265,7 +274,7 @@
             break;
         }
 
-        this._addFieldToFormParams(fieldName, fieldValue, params);
+        that._addFieldToFormParams(fieldName, fieldValue, params);
       });
 
       return params;
