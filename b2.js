@@ -228,6 +228,11 @@
     },
 
     // Encode a set of form elements as an array of names and values or as an params object
+	// There are two points need to note:
+	//	 1. if the name of the form controls is prefixed to a 'ignore',  then the controls will not be serialized to
+	//    the result
+	//
+	// 2. we support to define a value2 to specify the value when the checkbox is not checked, default is false
     serializeForm: function (formEl, ignorePrefix, needArray) {
 	  var that = this;
       var $paramEls = $(formEl || this.el).find('input, select, textarea')
@@ -267,6 +272,8 @@
               // we support to define a value2 to specify the value when the checkbox is not checked, default is false
               if (fieldValue2 == null) {
                 fieldValue = false;
+              } else {
+                fieldValue = fieldValue2;
               }
             }
             break;
