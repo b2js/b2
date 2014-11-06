@@ -207,7 +207,7 @@
     },
 
     _addFieldToFormParams: function (fieldName, fieldValue, params) {
-      if (_.isObject(params)) {
+      if (_.isObject(params) && !_.isArray(params)) {
         var paramObj = params[fieldName];
 
         if (typeof paramObj == 'undefined')  {
