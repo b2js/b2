@@ -1,4 +1,4 @@
-//     B2.js 0.1.3
+//     B2.js 0.1.5
 
 //     (c) 2014-2014 Percy Zhang
 //     B2 may be freely distributed under the MIT license.
@@ -36,7 +36,7 @@
   var previousB2 = root.B2;
 
   // Current version of the library. Keep in sync with `package.json`.
-  B2.VERSION = '0.1.4';
+  B2.VERSION = '0.1.5';
 
   // Runs B2.js in *noConflict* mode, returning the `B2` variable
   // to its previous owner. Returns a reference to this B2 object.
@@ -170,11 +170,11 @@
      * @returns {LM.View}
      */
     getComponent: function (name) {
-      return this._components[name];
+      return this._components ? this._components[name] : null;
     },
 
     getComponents: function () {
-      return this._components;
+      return this._components || {};
     },
 
     // Remove some subviews or all subviews from current view
