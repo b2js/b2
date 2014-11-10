@@ -1,6 +1,6 @@
 {
   "name": "b2",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A super lightweight framework based on backbone.js",
   "main": "b2.js",
   "directories": {
