@@ -108,7 +108,7 @@
           $(container).append(component.el);
         }
 
-	    if (dontRender !== false) {
+	    if (dontRender !== true) {
 		  component.render();
 	    }
       }
