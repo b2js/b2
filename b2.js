@@ -85,7 +85,7 @@
     // Register a sub view/component to the current view
     // the name is the name of the registered component
     // the container is a selector or element used as the dom container of the sub view
-    registerComponent: function (name, component, container) {
+    registerComponent: function (name, component, container, dontRender) {
       var i;
 
       this._components = this._components || {};
@@ -107,7 +107,10 @@
         } else {
           $(container).append(component.el);
         }
-        component.render();
+
+	    if (dontRender !== false) {
+		  component.render();
+	    }
       }
 
       this._components[name] = component;
