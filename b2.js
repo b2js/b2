@@ -314,7 +314,7 @@
       // remove self from parent view and stop all event listeners from parent which used to listen the child events
       var parentView = this._parentView;
       if (parentView) {
-        parentView.stopListening(this, 'all');
+        parentView.stopListening(this);
 
         if (parentView._components) {
           delete parentView._components[this._componentName];
