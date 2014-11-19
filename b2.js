@@ -256,6 +256,7 @@
         var fieldValue = $field.val();
         var fieldValue2 = $field.attr('value2');
         var isValidParam = true;
+	    var inverseValue = $field.attr('data-inverse-value');
 
         switch ($field.prop('type')) {
           case 'radio':
@@ -278,6 +279,10 @@
               } else {
                 fieldValue = fieldValue2;
               }
+            }
+
+            if (inverseValue) {
+	            fieldValue = !fieldValue;
             }
             break;
           default:
