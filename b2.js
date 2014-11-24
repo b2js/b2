@@ -435,6 +435,9 @@
     if (protoProps.render) {
       var _oldRender = protoProps.render;
       protoProps.render = function () {
+	    if (this.onRenderBegin) {
+		    this.onRenderBegin();
+	    }
         if (this.freeChildren) {
           this.freeChildren();
         }
