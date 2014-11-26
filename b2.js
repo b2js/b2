@@ -302,6 +302,9 @@
       return this.serializeForm(formEl, ignorePrefix, true);
     },
 
+	getParentView: function () {
+		return this._parentView;
+	},
 
     // override the default remove function of the Backbone.View
     // First, remove the sub views/components
