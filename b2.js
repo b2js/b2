@@ -445,7 +445,13 @@
           this.freeChildren();
         }
 
-        return _oldRender.apply(this, arguments);
+        var ret = _oldRender.apply(this, arguments);
+
+	    if (this.onRenderEnd) {
+		    this.onRenderEnd();
+	    }
+
+	    return ret;
       };
     }
 
