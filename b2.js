@@ -40,7 +40,7 @@
 
   // Runs B2.js in *noConflict* mode, returning the `B2` variable
   // to its previous owner. Returns a reference to this B2 object.
-  B2.noConflict = function() {
+  B2.noConflict = function () {
     root.B2 = previousB2;
     return this;
   };
@@ -48,8 +48,8 @@
   var localStorage = {};
 
   try {
-	localStorage = window.localStorage;
-  } catch(e) {
+    localStorage = window.localStorage;
+  } catch (e) {
   }
 
   B2.localStorage = localStorage;
@@ -101,17 +101,6 @@
         comp.remove();
       }
 
-      if (container) {
-        if (_.isString(container)) {
-          this.$(container).append(component.el);
-        } else {
-          $(container).append(component.el);
-        }
-
-	    if (dontRender !== true) {
-		  component.render();
-	    }
-      }
 
       this._components[name] = component;
       component._parentView = this;
@@ -164,6 +153,18 @@
         }
       });
 
+      if (container) {
+        if (_.isString(container)) {
+          this.$(container).append(component.el);
+        } else {
+          $(container).append(component.el);
+        }
+
+        if (dontRender !== true) {
+          component.render();
+        }
+      }
+
       return this;
     },
 
@@ -213,14 +214,14 @@
       if (_.isObject(params) && !_.isArray(params)) {
         var paramObj = params[fieldName];
 
-        if (typeof paramObj == 'undefined')  {
+        if (typeof paramObj == 'undefined') {
           params[fieldName] = fieldValue;
         } else if (!_.isArray(paramObj)) {
-	      var oldValue = paramObj;
+          var oldValue = paramObj;
           params[fieldName] = [oldValue];
-	      params[fieldName].push(fieldValue);
+          params[fieldName].push(fieldValue);
         } else if (_.isArray(paramObj)) {
-	        paramObj.push(fieldValue);
+          paramObj.push(fieldValue);
         }
       } else if (_.isArray(params)) {
         params.push({
@@ -231,13 +232,13 @@
     },
 
     // Encode a set of form elements as an array of names and values or as an params object
-	// There are two points need to note:
-	//	 1. if the name of the form controls is prefixed to a 'ignore',  then the controls will not be serialized to
-	//    the result
-	//
-	// 2. we support to define a value2 to specify the value when the checkbox is not checked, default is false
+    // There are two points need to note:
+    //	 1. if the name of the form controls is prefixed to a 'ignore',  then the controls will not be serialized to
+    //    the result
+    //
+    // 2. we support to define a value2 to specify the value when the checkbox is not checked, default is false
     serializeForm: function (formEl, ignorePrefix, needArray) {
-	  var that = this;
+      var that = this;
       var $paramEls = $(formEl || this.el).find('input, select, textarea')
         .filter(function () {
           // if the name of a element has a "ignore" prefix, it means not need to be serialized.
@@ -256,7 +257,7 @@
         var fieldValue = $field.val();
         var fieldValue2 = $field.attr('value2');
         var isValidParam = true;
-	    var inverseValue = $field.attr('data-inverse-value');
+        var inverseValue = $field.attr('data-inverse-value');
 
         switch ($field.prop('type')) {
           case 'radio':
@@ -282,16 +283,16 @@
             }
 
             if (inverseValue) {
-	            fieldValue = !fieldValue;
+              fieldValue = !fieldValue;
             }
             break;
           default:
             break;
         }
 
-	    if (isValidParam) {
-		  that._addFieldToFormParams(fieldName, fieldValue, params);
-	    }
+        if (isValidParam) {
+          that._addFieldToFormParams(fieldName, fieldValue, params);
+        }
       });
 
       return params;
@@ -302,9 +303,9 @@
       return this.serializeForm(formEl, ignorePrefix, true);
     },
 
-	getParentView: function () {
-		return this._parentView;
-	},
+    getParentView: function () {
+      return this._parentView;
+    },
 
     // override the default remove function of the Backbone.View
     // First, remove the sub views/components
@@ -438,20 +439,20 @@
     if (protoProps.render) {
       var _oldRender = protoProps.render;
       protoProps.render = function () {
-	    if (this.onRenderBegin) {
-		    this.onRenderBegin();
-	    }
+        if (this.onRenderBegin) {
+          this.onRenderBegin();
+        }
         if (this.freeChildren) {
           this.freeChildren();
         }
 
         var ret = _oldRender.apply(this, arguments);
 
-	    if (this.onRenderEnd) {
-		    this.onRenderEnd();
-	    }
+        if (this.onRenderEnd) {
+          this.onRenderEnd();
+        }
 
-	    return ret;
+        return ret;
       };
     }
 
