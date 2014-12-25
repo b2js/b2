@@ -315,6 +315,8 @@
       // remove all children view
       this.freeChildren();
 
+	  this.trigger('beforeRemove');
+
       // remove self from parent view and stop all event listeners from parent which used to listen the child events
       var parentView = this._parentView;
       if (parentView) {
@@ -327,7 +329,6 @@
         delete this._parentView;
       }
 
-      this.trigger('beforeRemove');
       Backbone.View.prototype.remove.apply(this, arguments);
     },
 
