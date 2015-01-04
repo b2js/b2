@@ -165,7 +165,7 @@
         }
       }
 
-      return this;
+      return component;
     },
 
     /**
