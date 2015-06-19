@@ -1,6 +1,6 @@
 //     B2.js 0.1.6
 
-//     (c) 2014-2014 Percy Zhang
+//     (c) 2014-2015 Percy Zhang
 //     B2 may be freely distributed under the MIT license.
 //     For all details and documentation:
 //     http://b2js.org
@@ -258,6 +258,11 @@
         var fieldValue2 = $field.attr('value2');
         var isValidParam = true;
         var inverseValue = $field.attr('data-inverse-value');
+        /**
+         if the element has a attr 'data-data-type', it means this value will be parse to some data types
+         now we support 'int', 'float' and it there is not this attr on element the value will still be javascript string.
+         */
+        var valueDataType = $field.data('dataType');
 
         switch ($field.prop('type')) {
           case 'radio':
@@ -288,6 +293,19 @@
             break;
           default:
             break;
+        }
+
+        if (valueDataType) {
+          switch (valueDataType.toLowerCase()) {
+            case 'int':
+              fieldValue = isNaN(fieldValue) ? fieldValue : parseInt(fieldValue);
+              break;
+            case 'float':
+              fieldValue = isNaN(fieldValue) ? fieldValue : parseFloat(fieldValue);
+              break;
+            default:
+              break;
+          }
         }
 
         if (isValidParam) {
