@@ -296,10 +296,12 @@
         if (valueDataType) {
           switch (valueDataType.toLowerCase()) {
             case 'int':
-              fieldValue = parseInt(fieldValue, 10) || fieldValue;
+              var intValue = parseInt(fieldValue, 10);
+              fieldValue = isNaN(intValue) ? fieldValue : intValue;
               break;
             case 'float':
-              fieldValue = parseFloat(fieldValue) || fieldValue;
+              var floatValue = parseFloat(fieldValue);
+              fieldValue = isNaN(floatValue) ? fieldValue : floatValue;
               break;
             default:
               break;
