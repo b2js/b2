@@ -258,10 +258,8 @@
         var fieldValue2 = $field.attr('value2');
         var isValidParam = true;
         var inverseValue = $field.attr('data-inverse-value');
-        /**
-         if the element has a attr 'data-data-type', it means this value will be parse to some data types
-         now we support 'int', 'float' and it there is not this attr on element the value will still be javascript string.
-         */
+        // if the element has a attr 'data-data-type', it means this value will be parse to some data types.
+        // now we support 'int', 'float' and it there is not this attr on element the value will still be javascript string.
         var valueDataType = $field.data('dataType');
 
         switch ($field.prop('type')) {
@@ -298,10 +296,10 @@
         if (valueDataType) {
           switch (valueDataType.toLowerCase()) {
             case 'int':
-              fieldValue = isNaN(fieldValue) ? fieldValue : parseInt(fieldValue);
+              fieldValue = parseInt(fieldValue, 10) || fieldValue;
               break;
             case 'float':
-              fieldValue = isNaN(fieldValue) ? fieldValue : parseFloat(fieldValue);
+              fieldValue = parseFloat(fieldValue) || fieldValue;
               break;
             default:
               break;
