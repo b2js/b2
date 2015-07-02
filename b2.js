@@ -258,9 +258,9 @@
         var fieldValue2 = $field.attr('value2');
         var isValidParam = true;
         var inverseValue = $field.attr('data-inverse-value');
-        // if the element has a attr 'data-data-type', it means this value will be parse to some data types.
+        // if the element has a attr 'data-data-type-to-parse', it means this value will be parse to some data types.
         // now we support 'int', 'float' and it there is not this attr on element the value will still be javascript string.
-        var valueDataType = $field.data('dataType');
+        var valueDataType = $field.data('dataTypeToParse');
 
         switch ($field.prop('type')) {
           case 'radio':
@@ -293,7 +293,7 @@
             break;
         }
 
-        if (valueDataType) {
+        if (_.isString(valueDataType)) {
           switch (valueDataType.toLowerCase()) {
             case 'int':
               var intValue = parseInt(fieldValue, 10);
