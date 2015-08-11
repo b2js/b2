@@ -231,6 +231,26 @@
       }
     },
 
+    _parseSerializeOpts: function (optsStr) {
+      var optsObj = {};
+      var opts = (optsStr || '').split(';');
+      var valueMap = {
+        'false': false,
+        'true': true
+      };
+
+      _.each(opts, function (opt) {
+        opt = opt.split(':');
+        var opt0 = $.trim(opt[0]);
+        var opt1= $.trim(opt[1]);
+        optsObj[opt0] = _.isUndefined(valueMap[opt1]) ? opt1 : valueMap[opt1];
+      });
+
+      return _.defaults(optsObj, {
+        trim: true
+      });
+    },
+
     // Encode a set of form elements as an array of names and values or as an params object
     // There are two points need to note:
     //	 1. if the name of the form controls is prefixed to a 'ignore',  then the controls will not be serialized to
@@ -254,7 +274,9 @@
       $paramEls.each(function () {
         var $field = $(this);
         var fieldName = $field.attr('name');
+        var serializeOpts = this._parseSerializeOpts($field.attr('serialize-opts'));
         var fieldValue = $field.val();
+        fieldValue = serializeOpts.trim ? $.trim(fieldValue) : fieldValue;
         var fieldValue2 = $field.attr('value2');
         var isValidParam = true;
         var inverseValue = $field.attr('data-inverse-value');
