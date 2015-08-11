@@ -274,7 +274,7 @@
       $paramEls.each(function () {
         var $field = $(this);
         var fieldName = $field.attr('name');
-        var serializeOpts = this._parseSerializeOpts($field.attr('serialize-opts'));
+        var serializeOpts = that._parseSerializeOpts($field.attr('serialize-opts'));
         var fieldValue = $field.val();
         fieldValue = serializeOpts.trim ? $.trim(fieldValue) : fieldValue;
         var fieldValue2 = $field.attr('value2');
