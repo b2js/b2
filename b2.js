@@ -231,6 +231,12 @@
       }
     },
 
+    // parse options when serializing a form, multiple options can be splited with colon(;)
+    // currently, only support trim option
+    //
+    // format example:
+    // data-serialize-opts="trim:true"                  trim the value when serialize the field
+    // data-serialize-opts="opt1:true;opt2:10;opt3:11"
     _parseSerializeOpts: function (optsStr) {
       var optsObj = {};
       var opts = (optsStr || '').split(';');
@@ -274,7 +280,7 @@
       $paramEls.each(function () {
         var $field = $(this);
         var fieldName = $field.attr('name');
-        var serializeOpts = that._parseSerializeOpts($field.attr('serialize-opts'));
+        var serializeOpts = that._parseSerializeOpts($field.attr('data-serialize-opts'));
         var fieldValue = $field.val();
         fieldValue = serializeOpts.trim ? $.trim(fieldValue) : fieldValue;
         var fieldValue2 = $field.attr('value2');
