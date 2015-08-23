@@ -82,6 +82,25 @@
 
     },
 
+    // config the events used to listen to the parent Views,
+    // the format will be this
+    // broadcastEvents: {
+    // 	"eventName": "eventCallbackFunctionName"
+    // }
+    //
+    broadcastEvents: {
+    },
+
+    // broadcast events to subviews
+    // the format is
+    // view.broadcast(eventName, arg1, arg2...);
+    //
+    broadcast: function (){
+      var args = [].slice.apply(arguments);
+      args.unshift('__broadcast__');
+      this.trigger.apply(this, args);
+    },
+
     // Register a sub view/component to the current view
     // the name is the name of the registered component
     // the container is a selector or element used as the dom container of the sub view
@@ -153,6 +172,20 @@
         }
       });
 
+      component.listenTo(this,'__broadcast__', function () {
+        var args = [].slice.apply(arguments);
+        var eventName = args.shift();
+        if (component.broadcastEvents.hasOwnProperty(eventName)) {
+          var funcName = component.broadcastEvents[eventName];
+          var func = component[funcName];
+          if (_.isFunction(func)) {
+            func.apply(component,args);
+          } else {
+            component.broadcast.apply(component,arguments);
+          }
+        }
+      });
+      
       if (container) {
         if (_.isString(container)) {
           this.$(container).append(component.el);
