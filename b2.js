@@ -88,14 +88,13 @@
     // 	"eventName": "eventCallbackFunctionName"
     // }
     //
-    broadcastEvents: {
-    },
+    broadcastEvents: {},
 
     // broadcast events to subviews
     // the format is
     // view.broadcast(eventName, arg1, arg2...);
     //
-    broadcast: function (){
+    broadcast: function () {
       var args = [].slice.apply(arguments);
       args.unshift('__broadcast__');
       this.trigger.apply(this, args);
@@ -172,20 +171,20 @@
         }
       });
 
-      component.listenTo(this,'__broadcast__', function () {
+      component.listenTo(this, '__broadcast__', function () {
         var args = [].slice.apply(arguments);
         var eventName = args.shift();
         if (component.broadcastEvents.hasOwnProperty(eventName)) {
           var funcName = component.broadcastEvents[eventName];
           var func = component[funcName];
           if (_.isFunction(func)) {
-            func.apply(component,args);
+            func.apply(component, args);
           } else {
-            component.broadcast.apply(component,arguments);
+            component.broadcast.apply(component, arguments);
           }
         }
       });
-      
+
       if (container) {
         if (_.isString(container)) {
           this.$(container).append(component.el);
