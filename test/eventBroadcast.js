@@ -110,9 +110,9 @@ describe('broad cast feature test', function () {
                 var childsView = parentView.registerComponent('child', new ChildView({}))
             },
             appEvents: {
-                'all parent': 'appEventsCallback'
+                'all': 'appEventsCallback'
             },
-            appEventsCallback: function (eventName, flag) {
+            appEventsCallback: function (eventName, self, flag) {
                 flag.val = 'ah';
             }
         });

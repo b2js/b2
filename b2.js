@@ -156,17 +156,8 @@
 
               var func = this[funcName];
               for (i = 0; i < eventNames.length; i++) {
-
-                if (eventNames[i] === 'all') {
-                  this.listenTo(component, 'all', function (eName) {
-                    // while parentview trigger '__broadcast__' events to its subview, we do not want to delivery this event to the 'GrandpaView'
-                    if (eName === '__broadcast__') {
-                      return;
-                    }
-                    func.apply(this, arguments);
-                  });
-                }
-                else {
+                // we handle 'all' event specifically
+                if (eventNames[i] !== 'all') {
                   this.listenTo(component, eventNames[i], func);
                 }
               }
@@ -183,6 +174,8 @@
 
         if (this.appEvents.hasOwnProperty('all')) {
           var funcName = this.appEvents.all;
+
+          // the 'all' event callback will get params as: cb('all', component, args...);
           this[funcName].apply(this, [arguments[0], component].concat(_.toArray(arguments).slice(1)));
         } else if (!component._events || !component._events[eventName]) {
           this.trigger.apply(this, arguments);
