@@ -154,8 +154,12 @@
             if (matched) {
               var eventNames = eventName.split(/,/);
 
+              var func = this[funcName];
               for (i = 0; i < eventNames.length; i++) {
-                this.listenTo(component, eventNames[i], this[funcName]);
+                // we handle 'all' event specifically
+                if (eventNames[i] !== 'all') {
+                  this.listenTo(component, eventNames[i], func);
+                }
               }
             }
           }
@@ -163,8 +167,15 @@
       }
 
       this.listenTo(component, 'all', function (eventName) {
+        // while parentview trigger '__broadcast__' events to its subview, we do not want to delivery this event to the 'GrandpaView'
+        if (eventName === '__broadcast__') {
+          return;
+        }
+
         if (this.appEvents.hasOwnProperty('all')) {
           var funcName = this.appEvents.all;
+
+          // the 'all' event callback will get params as: cb('all', component, args...);
           this[funcName].apply(this, [arguments[0], component].concat(_.toArray(arguments).slice(1)));
         } else if (!component._events || !component._events[eventName]) {
           this.trigger.apply(this, arguments);
@@ -176,12 +187,16 @@
         var eventName = args.shift();
         if (component.broadcastEvents.hasOwnProperty(eventName)) {
           var funcName = component.broadcastEvents[eventName];
-          var func = component[funcName];
-          if (_.isFunction(func)) {
-            func.apply(component, args);
+          var func;
+          if (_.isString(funcName)) {
+            func = component[funcName];
           } else {
-            component.broadcast.apply(component, arguments);
+            func = funcName;
           }
+          func.apply(component, args);
+        }
+        else {
+          component.broadcast.apply(component, arguments);
         }
       });
 
