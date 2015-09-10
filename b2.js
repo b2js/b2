@@ -319,7 +319,7 @@
             var $parent = $(this).closest('.' + ignoredParentClass);
             if ($parent.length === 0) {
               notInIgnoredForm = true;
-            } else if (!$.contains(formEl, $parent.get(0))) {
+            } else if (!$.contains(formEl, $parent[0])) {
               notInIgnoredForm = true;
             }
             // if the name of a element has a "ignore" prefix, it means not need to be serialized.
