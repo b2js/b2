@@ -312,7 +312,7 @@
     // 2. we support to define a value2 to specify the value when the checkbox is not checked, default is false
     serializeForm: function (formEl, ignorePrefix, needArray, ignoredParentClass) {
       var that = this;
-      var formEl = formEl || this.el;
+      formEl = formEl || this.el;
       var $paramEls = $(formEl).find('input, select, textarea')
         .filter(function () {
             var notInIgnoredForm = false;
