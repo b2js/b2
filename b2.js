@@ -310,12 +310,20 @@
     //    the result
     //
     // 2. we support to define a value2 to specify the value when the checkbox is not checked, default is false
-    serializeForm: function (formEl, ignorePrefix, needArray) {
+    serializeForm: function (formEl, ignorePrefix, needArray, ignoredParentClass) {
       var that = this;
-      var $paramEls = $(formEl || this.el).find('input, select, textarea')
+      formEl = formEl || this.el;
+      var $paramEls = $(formEl).find('input, select, textarea')
         .filter(function () {
-          // if the name of a element has a "ignore" prefix, it means not need to be serialized.
-          return this.name && this.name.indexOf(ignorePrefix || 'ignore') === -1;
+            var notInIgnoredForm = false;
+            var $parent = $(this).closest('.' + ignoredParentClass);
+            if ($parent.length === 0) {
+              notInIgnoredForm = true;
+            } else if (!$.contains(formEl, $parent[0])) {
+              notInIgnoredForm = true;
+            }
+            // if the name of a element has a "ignore" prefix, it means not need to be serialized.
+            return notInIgnoredForm && this.name && this.name.indexOf(ignorePrefix || 'ignore') === -1;
         });
 
       var params = {};
