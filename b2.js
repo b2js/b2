@@ -131,7 +131,7 @@
           var funcName = this.appEvents[key];
           var match = key.match(delegateEventSplitter);
           var eventName = match[1],
-            selector = match[2];
+              selector = match[2];
 
           if (match && selector) {
             // if select is a regexp
@@ -314,7 +314,7 @@
       var that = this;
       formEl = formEl || this.el;
       var $paramEls = $(formEl).find('input, select, textarea')
-        .filter(function () {
+          .filter(function () {
             var notInIgnoredForm = false;
             var $parent = $(this).closest('.' + ignoredParentClass);
             if ($parent.length === 0) {
@@ -324,7 +324,7 @@
             }
             // if the name of a element has a "ignore" prefix, it means not need to be serialized.
             return notInIgnoredForm && this.name && this.name.indexOf(ignorePrefix || 'ignore') === -1;
-        });
+          });
 
       var params = {};
 
@@ -416,7 +416,7 @@
       // remove all children view
       this.freeChildren();
 
-	  this.trigger('beforeRemove');
+      this.trigger('beforeRemove');
 
       // remove self from parent view and stop all event listeners from parent which used to listen the child events
       var parentView = this._parentView;
@@ -498,37 +498,42 @@
       return 'xyz';
     }) ? /\b_super\b/ : /.*/;
 
+    var manageAjaxTest = /'manage ajax';/;
+
     // Add prototype properties (instance properties) to the subclass,
     // if supplied.
     for (var name in protoProps) {
       if (protoProps.hasOwnProperty(name)) {
-        prototype[name] = typeof protoProps[name] == 'function' && typeof _super[name] == 'function' &&
-          (fnTest.test(protoProps[name]) || forceSuperMethods.indexOf(name) > -1) ?
+        prototype[name] = typeof protoProps[name] == 'function' && ( manageAjaxTest.test(protoProps[name]) || (typeof _super[name] == 'function' &&
+        (fnTest.test(protoProps[name]) || forceSuperMethods.indexOf(name) > -1)) ) ?
 
-          (function (name, fn) {
-            return function () {
-              var tmp = this._super;
+            (function (name, fn) {
+              return function () {
+                var tmp = this._super;
 
-              // Add a new ._super() method that is the same method but on the super-class
-              this._super = _super[name];
+                if ( manageAjaxTest.test(fn) ) {
+                  fn.viewId = '_' + this.cid + '_';
+                }
 
-              // The method only need to be bound temporarily, so we
-              // remove it when we're done executing
-              var ret = fn.apply(this, arguments);
+                // Add a new ._super() method that is the same method but on the super-class
+                this._super = _super[name];
 
-              this._super = tmp;
+                // The method only need to be bound temporarily, so we
+                // remove it when we're done executing
+                var ret = fn.apply(this, arguments);
 
-              return ret;
-            };
-          })(name, protoProps[name]) : // jshint ignore:line
+                this._super = tmp;
 
-          protoProps[name];
+                return ret;
+              };
+            })(name, protoProps[name]) : // jshint ignore:line
+
+            protoProps[name];
       }
     }
 
     // Set a convenience property in case the parent's prototype is needed later.
     child.__super__ = parent.prototype;
-
     return child;
   };
 
@@ -562,6 +567,7 @@
 
     SubView.prototype.events = _.extend({}, this.prototype.events, protoProps.events);
     SubView.prototype.appEvents = _.extend({}, this.prototype.appEvents, protoProps.appEvents);
+    SubView.prototype.broadcastEvents = _.extend({}, this.prototype.broadcastEvents, protoProps.broadcastEvents);
 
     return SubView;
   };
