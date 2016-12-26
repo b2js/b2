@@ -165,7 +165,7 @@
           var funcName = this.appEvents[key];
           var match = key.match(delegateEventSplitter);
           var eventName = match[1],
-            selector = match[2];
+              selector = match[2];
 
           if (match && selector) {
             // if select is a regexp
@@ -348,17 +348,17 @@
       var that = this;
       formEl = formEl || this.el;
       var $paramEls = $(formEl).find('input, select, textarea')
-        .filter(function () {
-          var notInIgnoredForm = false;
-          var $parent = $(this).closest('.' + ignoredParentClass);
-          if ($parent.length === 0) {
-            notInIgnoredForm = true;
-          } else if (!$.contains(formEl, $parent[0])) {
-            notInIgnoredForm = true;
-          }
-          // if the name of a element has a "ignore" prefix, it means not need to be serialized.
-          return notInIgnoredForm && this.name && this.name.indexOf(ignorePrefix || 'ignore') === -1;
-        });
+          .filter(function () {
+            var notInIgnoredForm = false;
+            var $parent = $(this).closest('.' + ignoredParentClass);
+            if ($parent.length === 0) {
+              notInIgnoredForm = true;
+            } else if (!$.contains(formEl, $parent[0])) {
+              notInIgnoredForm = true;
+            }
+            // if the name of a element has a "ignore" prefix, it means not need to be serialized.
+            return notInIgnoredForm && this.name && this.name.indexOf(ignorePrefix || 'ignore') === -1;
+          });
 
       var params = {};
 
@@ -544,28 +544,28 @@
         prototype[name] = typeof protoProps[name] == 'function' && ( manageAjaxTest.test(protoProps[name]) || (typeof _super[name] == 'function' &&
         (fnTest.test(protoProps[name]) || forceSuperMethods.indexOf(name) > -1)) ) ?
 
-          (function (name, fn) {
-            return function () {
-              var tmp = this._super;
+            (function (name, fn) {
+              return function () {
+                var tmp = this._super;
 
-              if ( manageAjaxTest.test(fn) ) {
-                fn.viewId = '_' + this.cid + '_';
-              }
+                if ( manageAjaxTest.test(fn) ) {
+                  fn.viewId = '_' + this.cid + '_';
+                }
 
-              // Add a new ._super() method that is the same method but on the super-class
-              this._super = _super[name];
+                // Add a new ._super() method that is the same method but on the super-class
+                this._super = _super[name];
 
-              // The method only need to be bound temporarily, so we
-              // remove it when we're done executing
-              var ret = fn.apply(this, arguments);
+                // The method only need to be bound temporarily, so we
+                // remove it when we're done executing
+                var ret = fn.apply(this, arguments);
 
-              this._super = tmp;
+                this._super = tmp;
 
-              return ret;
-            };
-          })(name, protoProps[name]) : // jshint ignore:line
+                return ret;
+              };
+            })(name, protoProps[name]) : // jshint ignore:line
 
-          protoProps[name];
+            protoProps[name];
       }
     }
 
