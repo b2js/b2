@@ -56,6 +56,32 @@
 
   _.extend(B2, Backbone);
 
+  // B2 root views are the views which has children view.(which called registerComponent method);
+  B2.rootViews = {};
+
+  // search component by unique name like B2.getComponentByUniqueName('')
+  B2.getComponentByUniqueName = function (uniqName) {
+    function findComponentByUniqName (components, uniqName) {
+      var ret;
+
+      _.each(components, function (component) {
+        if (ret) { //  exit iteration early if already found component
+          return false;
+        }
+
+        if (component._uuid + '_' + component._componentName === uniqName) {
+          ret = component;
+        } else {
+          ret = findComponentByUniqName(component._components, uniqName);
+        }
+      });
+
+      return ret;
+    }
+
+    return findComponentByUniqName(B2.rootViews, uniqName);
+  };
+
   // B2.View
   // -------------
 
@@ -106,6 +132,11 @@
     registerComponent: function (name, component, container, dontRender) {
       var i;
 
+      //root component which is created by "new BackboneView" directly.
+      if (!this._parentView) {
+        B2.rootViews[this.cid] = this;
+      }
+
       this._components = this._components || {};
 
       if (this._components.hasOwnProperty(name)) {
@@ -123,6 +154,9 @@
       this._components[name] = component;
       component._parentView = this;
       component._componentName = name;
+      component._uuid = _.uniqueId();
+
+      component.$el.attr('data-component-unique-name', component._uuid + '_' + name);
 
       var delegateEventSplitter = /^(\S+)\s*(\S+)$/;
 
@@ -131,7 +165,7 @@
           var funcName = this.appEvents[key];
           var match = key.match(delegateEventSplitter);
           var eventName = match[1],
-              selector = match[2];
+            selector = match[2];
 
           if (match && selector) {
             // if select is a regexp
@@ -314,17 +348,17 @@
       var that = this;
       formEl = formEl || this.el;
       var $paramEls = $(formEl).find('input, select, textarea')
-          .filter(function () {
-            var notInIgnoredForm = false;
-            var $parent = $(this).closest('.' + ignoredParentClass);
-            if ($parent.length === 0) {
-              notInIgnoredForm = true;
-            } else if (!$.contains(formEl, $parent[0])) {
-              notInIgnoredForm = true;
-            }
-            // if the name of a element has a "ignore" prefix, it means not need to be serialized.
-            return notInIgnoredForm && this.name && this.name.indexOf(ignorePrefix || 'ignore') === -1;
-          });
+        .filter(function () {
+          var notInIgnoredForm = false;
+          var $parent = $(this).closest('.' + ignoredParentClass);
+          if ($parent.length === 0) {
+            notInIgnoredForm = true;
+          } else if (!$.contains(formEl, $parent[0])) {
+            notInIgnoredForm = true;
+          }
+          // if the name of a element has a "ignore" prefix, it means not need to be serialized.
+          return notInIgnoredForm && this.name && this.name.indexOf(ignorePrefix || 'ignore') === -1;
+        });
 
       var params = {};
 
@@ -428,6 +462,9 @@
         }
 
         delete this._parentView;
+      } else {
+        // no parent view, which means its a root component which is created by new BackboneView directly.
+        delete B2.rootViews[this.cid];
       }
 
       Backbone.View.prototype.remove.apply(this, arguments);
@@ -507,28 +544,28 @@
         prototype[name] = typeof protoProps[name] == 'function' && ( manageAjaxTest.test(protoProps[name]) || (typeof _super[name] == 'function' &&
         (fnTest.test(protoProps[name]) || forceSuperMethods.indexOf(name) > -1)) ) ?
 
-            (function (name, fn) {
-              return function () {
-                var tmp = this._super;
+          (function (name, fn) {
+            return function () {
+              var tmp = this._super;
 
-                if ( manageAjaxTest.test(fn) ) {
-                  fn.viewId = '_' + this.cid + '_';
-                }
+              if ( manageAjaxTest.test(fn) ) {
+                fn.viewId = '_' + this.cid + '_';
+              }
 
-                // Add a new ._super() method that is the same method but on the super-class
-                this._super = _super[name];
+              // Add a new ._super() method that is the same method but on the super-class
+              this._super = _super[name];
 
-                // The method only need to be bound temporarily, so we
-                // remove it when we're done executing
-                var ret = fn.apply(this, arguments);
+              // The method only need to be bound temporarily, so we
+              // remove it when we're done executing
+              var ret = fn.apply(this, arguments);
 
-                this._super = tmp;
+              this._super = tmp;
 
-                return ret;
-              };
-            })(name, protoProps[name]) : // jshint ignore:line
+              return ret;
+            };
+          })(name, protoProps[name]) : // jshint ignore:line
 
-            protoProps[name];
+          protoProps[name];
       }
     }
 
