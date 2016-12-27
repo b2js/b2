@@ -56,6 +56,32 @@
 
   _.extend(B2, Backbone);
 
+  // B2 root views are the views which has children view.(which called registerComponent method);
+  B2.rootViews = {};
+
+  // search component by unique name like B2.getComponentByUniqueName('')
+  B2.getComponentByUniqueName = function (uniqName) {
+    function findComponentByUniqName (components, uniqName) {
+      var ret;
+
+      _.each(components, function (component) {
+        if (ret) { //  exit iteration early if already found component
+          return false;
+        }
+
+        if (component._uuid + '_' + component._componentName === uniqName) {
+          ret = component;
+        } else {
+          ret = findComponentByUniqName(component._components, uniqName);
+        }
+      });
+
+      return ret;
+    }
+
+    return findComponentByUniqName(B2.rootViews, uniqName);
+  };
+
   // B2.View
   // -------------
 
@@ -106,6 +132,11 @@
     registerComponent: function (name, component, container, dontRender) {
       var i;
 
+      //root component which is created by "new BackboneView" directly.
+      if (!this._parentView) {
+        B2.rootViews[this.cid] = this;
+      }
+
       this._components = this._components || {};
 
       if (this._components.hasOwnProperty(name)) {
@@ -123,6 +154,9 @@
       this._components[name] = component;
       component._parentView = this;
       component._componentName = name;
+      component._uuid = _.uniqueId();
+
+      component.$el.attr('data-component-unique-name', component._uuid + '_' + name);
 
       var delegateEventSplitter = /^(\S+)\s*(\S+)$/;
 
@@ -428,6 +462,9 @@
         }
 
         delete this._parentView;
+      } else {
+        // no parent view, which means its a root component which is created by new BackboneView directly.
+        delete B2.rootViews[this.cid];
       }
 
       Backbone.View.prototype.remove.apply(this, arguments);
