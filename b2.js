@@ -1,4 +1,4 @@
-//     B2.js 0.1.6
+//     B2.js 0.1.10
 
 //     (c) 2014-2015 Percy Zhang
 //     B2 may be freely distributed under the MIT license.
