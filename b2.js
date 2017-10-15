@@ -153,6 +153,11 @@
 
       this._components[name] = component;
       component._parentView = this;
+
+      if (B2.rootViews[component.cid]) {
+          delete B2.rootViews[component.cid];
+      }
+
       component._componentName = name;
       component._uuid = _.uniqueId();
 
