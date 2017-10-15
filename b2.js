@@ -462,9 +462,10 @@
         }
 
         delete this._parentView;
-      } else {
-        // no parent view, which means its a root component which is created by new BackboneView directly.
-        delete B2.rootViews[this.cid];
+      }
+
+      if (B2.rootViews[this.cid]) {
+          delete B2.rootViews[this.cid];
       }
 
       Backbone.View.prototype.remove.apply(this, arguments);
