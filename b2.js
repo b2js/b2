@@ -137,6 +137,7 @@
     // the container is a selector or element used as the dom container of the sub view
     registerComponent: function (name, component, container, dontRender) {
       if (this.isRemoved) {
+        component.remove();
         B2.log('i am already removed, dont register components to me.', this._uuid, this._componentName);
         return component;
       }
