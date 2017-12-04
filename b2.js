@@ -1,4 +1,4 @@
-//     B2.js 0.1.10
+//     B2.js 0.1.12
 
 //     (c) 2014-2015 Percy Zhang
 //     B2 may be freely distributed under the MIT license.
@@ -36,7 +36,7 @@
   var previousB2 = root.B2;
 
   // Current version of the library. Keep in sync with `package.json`.
-  B2.VERSION = '0.1.6';
+  B2.VERSION = '0.1.11';
 
   // Runs B2.js in *noConflict* mode, returning the `B2` variable
   // to its previous owner. Returns a reference to this B2 object.
@@ -53,6 +53,12 @@
   }
 
   B2.localStorage = localStorage;
+
+  B2.log = function () {
+    if (B2.debug && window.console && window.console.log) {
+        return console.log.apply(window.console, arguments);
+    }
+  };
 
   _.extend(B2, Backbone);
 
@@ -130,6 +136,11 @@
     // the name is the name of the registered component
     // the container is a selector or element used as the dom container of the sub view
     registerComponent: function (name, component, container, dontRender) {
+      if (this.isRemoved) {
+        component.remove();
+        B2.log('i am already removed, dont register components to me.', this._uuid, this._componentName);
+        return component;
+      }
       var i;
 
       //root component which is created by "new BackboneView" directly.
@@ -474,6 +485,8 @@
       }
 
       Backbone.View.prototype.remove.apply(this, arguments);
+
+      this.isRemoved = true;
     },
 
     // the default render function
@@ -541,22 +554,16 @@
       return 'xyz';
     }) ? /\b_super\b/ : /.*/;
 
-    var manageAjaxTest = /'manage ajax';/;
-
     // Add prototype properties (instance properties) to the subclass,
     // if supplied.
     for (var name in protoProps) {
       if (protoProps.hasOwnProperty(name)) {
-        prototype[name] = typeof protoProps[name] == 'function' && ( manageAjaxTest.test(protoProps[name]) || (typeof _super[name] == 'function' &&
-        (fnTest.test(protoProps[name]) || forceSuperMethods.indexOf(name) > -1)) ) ?
+        prototype[name] = typeof protoProps[name] == 'function' && (typeof _super[name] == 'function' &&
+        (fnTest.test(protoProps[name]) || forceSuperMethods.indexOf(name) > -1)) ?
 
             (function (name, fn) {
               return function () {
                 var tmp = this._super;
-
-                if ( manageAjaxTest.test(fn) ) {
-                  fn.viewId = '_' + this.cid + '_';
-                }
 
                 // Add a new ._super() method that is the same method but on the super-class
                 this._super = _super[name];
@@ -589,6 +596,10 @@
     if (protoProps.render) {
       var _oldRender = protoProps.render;
       protoProps.render = function () {
+        if (this.isRemoved) {
+          B2.log('i am already removed, dont render me', this._uuid, this._componentName);
+          return this;
+        }
         if (this.onRenderBegin) {
           this.onRenderBegin();
         }
