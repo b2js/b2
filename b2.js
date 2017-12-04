@@ -1,4 +1,4 @@
-//     B2.js 0.1.11
+//     B2.js 0.1.12
 
 //     (c) 2014-2015 Percy Zhang
 //     B2 may be freely distributed under the MIT license.
@@ -554,22 +554,16 @@
       return 'xyz';
     }) ? /\b_super\b/ : /.*/;
 
-    var manageAjaxTest = /'manage ajax';/;
-
     // Add prototype properties (instance properties) to the subclass,
     // if supplied.
     for (var name in protoProps) {
       if (protoProps.hasOwnProperty(name)) {
-        prototype[name] = typeof protoProps[name] == 'function' && ( manageAjaxTest.test(protoProps[name]) || (typeof _super[name] == 'function' &&
-        (fnTest.test(protoProps[name]) || forceSuperMethods.indexOf(name) > -1)) ) ?
+        prototype[name] = typeof protoProps[name] == 'function' && (typeof _super[name] == 'function' &&
+        (fnTest.test(protoProps[name]) || forceSuperMethods.indexOf(name) > -1)) ?
 
             (function (name, fn) {
               return function () {
                 var tmp = this._super;
-
-                if ( manageAjaxTest.test(fn) ) {
-                  fn.viewId = '_' + this.cid + '_';
-                }
 
                 // Add a new ._super() method that is the same method but on the super-class
                 this._super = _super[name];
